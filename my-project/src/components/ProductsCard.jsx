@@ -1,14 +1,16 @@
 import React from "react";
 import { useCart } from "../Context/CartContext";
 
-import iconAddToCart from "/src/assets/images/icon-add-to-cart.svg";
-import iconDecrement from "/src/assets/images/icon-decrement-quantity.svg";
-import iconIncrement from "/src/assets/images/icon-increment-quantity.svg";
+// ✅ FIX: use RELATIVE paths (not /src/...)
+import iconAddToCart from "../assets/images/icon-add-to-cart.svg";
+import iconDecrement from "../assets/images/icon-decrement-quantity.svg";
+import iconIncrement from "../assets/images/icon-increment-quantity.svg";
 
 export default function ProductsCard({ product }) {
   const { cart, addToCart, updateQuantity } = useCart();
   const cartItem = cart?.find((item) => item.name === product.name);
 
+  // ✅ CORRECT way to dynamically load images in Vite
   function getImageUrl(name) {
     return new URL(`../assets/images/${name}`, import.meta.url).href;
   }
@@ -33,37 +35,25 @@ export default function ProductsCard({ product }) {
               onClick={() => addToCart(product)}
               className="flex items-center justify-center gap-2 w-full h-full bg-white border border-rose-400 rounded-full font-bold text-rose-900 hover:border-red-custom hover:text-red-custom transition-all shadow-md px-4"
             >
-              <img src={iconAddToCart} alt="" className="w-5 h-5 shrink-0" />
-              <span className="text-sm font-bold whitespace-nowrap">
-                Add to Cart
-              </span>
+              <img src={iconAddToCart} alt="add to cart" className="w-5 h-5" />
+              <span className="text-sm font-bold">Add to Cart</span>
             </button>
           ) : (
             <div className="flex items-center justify-between w-full h-full bg-red-custom text-white px-4 rounded-full shadow-lg">
               <button
                 onClick={() => updateQuantity(product.name, -1)}
-                className="flex items-center justify-center w-5 h-5 border border-white rounded-full hover:bg-white transition-all group/icon"
+                className="w-5 h-5 border border-white rounded-full flex items-center justify-center"
               >
-                <img
-                  src={iconDecrement}
-                  alt="minus"
-                  className="w-2.5 brightness-0 invert group-hover/icon:brightness-100 group-hover/icon:invert-0"
-                />
+                <img src={iconDecrement} alt="minus" className="w-2.5" />
               </button>
 
-              <span className="font-bold text-sm select-none">
-                {cartItem.quantity}
-              </span>
+              <span className="font-bold text-sm">{cartItem.quantity}</span>
 
               <button
                 onClick={() => updateQuantity(product.name, 1)}
-                className="flex items-center justify-center w-5 h-5 border border-white rounded-full hover:bg-white transition-all group/icon"
+                className="w-5 h-5 border border-white rounded-full flex items-center justify-center"
               >
-                <img
-                  src={iconIncrement}
-                  alt="plus"
-                  className="w-2.5 brightness-0 invert group-hover/icon:brightness-100 group-hover/icon:invert-0"
-                />
+                <img src={iconIncrement} alt="plus" className="w-2.5" />
               </button>
             </div>
           )}
@@ -71,11 +61,10 @@ export default function ProductsCard({ product }) {
       </div>
 
       <div className="flex flex-col text-left">
-        <p className="text-rose-400 text-xs font-semibold uppercase tracking-wider">
+        <p className="text-rose-400 text-xs font-semibold uppercase">
           {product.category}
         </p>
-        {/* 'text-base' ensures the product name is exactly 16px */}
-        <h3 className="font-bold text-rose-900 text-base leading-tight mt-1">
+        <h3 className="font-bold text-rose-900 text-base mt-1">
           {product.name}
         </h3>
         <p className="text-red-custom font-bold text-lg mt-1">
