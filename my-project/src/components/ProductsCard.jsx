@@ -1,8 +1,7 @@
 import React from "react";
 import { useCart } from "../Context/CartContext";
 
-// ❌ removed /src paths
-// ✅ relative imports (NO layout impact)
+// Direct imports for the icons in src/assets/images
 import iconAddToCart from "../assets/images/icon-add-to-cart.svg";
 import iconDecrement from "../assets/images/icon-decrement-quantity.svg";
 import iconIncrement from "../assets/images/icon-increment-quantity.svg";
@@ -11,13 +10,11 @@ export default function ProductsCard({ product }) {
   const { cart, addToCart, updateQuantity } = useCart();
   const cartItem = cart?.find((item) => item.name === product.name);
 
-  // ✅ minimal fix: same logic, Vite-safe
-  function getImageUrl(name) {
-    return new URL(`../assets/images/${name}`, import.meta.url).href;
-  }
-
-  // ❗ SAME logic you had — JSON already provides filename
-  const finalImagePath = getImageUrl(product.image.desktop);
+  const fileName = product.image.desktop.split("/").pop();
+  const finalImagePath = new URL(
+    `../assets/images/${fileName}`,
+    import.meta.url,
+  ).href;
 
   return (
     <div className="flex flex-col w-full font-red-hat">
@@ -34,7 +31,7 @@ export default function ProductsCard({ product }) {
           {!cartItem ? (
             <button
               onClick={() => addToCart(product)}
-              className="flex items-center justify-center gap-2 w-full h-full bg-white border border-rose-400 rounded-full font-bold text-rose-900 hover:border-red-custom hover:text-red-custom transition-all shadow-md px-4"
+              className="flex items-center justify-center gap-2 w-full h-full bg-white border border-rose-400 rounded-full font-bold text-rose-900 hover:border-red-custom hover:text-red-custom transition-all shadow-md"
             >
               <img src={iconAddToCart} alt="" className="w-5 h-5 shrink-0" />
               <span className="text-sm font-bold whitespace-nowrap">
@@ -53,11 +50,7 @@ export default function ProductsCard({ product }) {
                   className="w-2.5 brightness-0 invert group-hover/icon:brightness-100 group-hover/icon:invert-0"
                 />
               </button>
-
-              <span className="font-bold text-sm select-none">
-                {cartItem.quantity}
-              </span>
-
+              <span className="font-bold text-sm">{cartItem.quantity}</span>
               <button
                 onClick={() => updateQuantity(product.name, 1)}
                 className="flex items-center justify-center w-5 h-5 border border-white rounded-full hover:bg-white transition-all group/icon"

@@ -5,13 +5,11 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-  // 1. Initialize state by checking localStorage first
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("dessert_cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // 2. Save to localStorage whenever the cart changes
   useEffect(() => {
     localStorage.setItem("dessert_cart", JSON.stringify(cart));
   }, [cart]);
@@ -42,11 +40,7 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // 3. Helper to clear cart (useful for 'Start New Order' button)
-  const resetCart = () => {
-    setCart([]);
-    localStorage.removeItem("dessert_cart");
-  };
+  const resetCart = () => setCart([]);
 
   return (
     <CartContext.Provider
